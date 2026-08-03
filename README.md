@@ -127,28 +127,34 @@ npm test
 
 ## 4. API Reference
 
-| Method | Endpoint                    | Description                          |
-|--------|------------------------------|---------------------------------------|
-| GET    | `/api/menu`                  | List all menu items                   |
-| GET    | `/api/menu/:id`               | Get one menu item                     |
-| POST   | `/api/menu`                   | Create a menu item                    |
-| PUT    | `/api/menu/:id`               | Update a menu item                    |
-| DELETE | `/api/menu/:id`               | Delete a menu item                    |
-| POST   | `/api/orders`                 | Place an order                        |
-| GET    | `/api/orders?phone=`          | List orders (optional phone filter)   |
-| GET    | `/api/orders/:id`             | Get one order                         |
-| PATCH  | `/api/orders/:id/status`      | Update order status                   |
-| DELETE | `/api/orders/:id`             | Cancel an order                       |
+| Method | Endpoint                 | Description                         |
+| ------ | ------------------------ | ----------------------------------- |
+| GET    | `/api/menu`              | List all menu items                 |
+| GET    | `/api/menu/:id`          | Get one menu item                   |
+| POST   | `/api/menu`              | Create a menu item                  |
+| PUT    | `/api/menu/:id`          | Update a menu item                  |
+| DELETE | `/api/menu/:id`          | Delete a menu item                  |
+| POST   | `/api/orders`            | Place an order                      |
+| GET    | `/api/orders?phone=`     | List orders (optional phone filter) |
+| GET    | `/api/orders/:id`        | Get one order                       |
+| PATCH  | `/api/orders/:id/status` | Update order status                 |
+| DELETE | `/api/orders/:id`        | Cancel an order                     |
 
 **Place an order — request body:**
+
 ```json
 {
   "items": [{ "menuItemId": "abc123", "quantity": 2 }],
-  "customer": { "name": "Jane Doe", "address": "123 Main St", "phone": "555-123-4567" }
+  "customer": {
+    "name": "Jane Doe",
+    "address": "123 Main St",
+    "phone": "555-123-4567"
+  }
 }
 ```
 
 **Socket.IO events:**
+
 - Client emits `order:subscribe` with an order id to join that order's room.
 - Server emits `order:status` with `{ orderId, status, updatedAt }` on every transition.
 
@@ -157,53 +163,13 @@ npm test
 ## 5. Deployment
 
 **Backend → Render (or Railway):**
+
 1. Push this repo to GitHub.
 2. New Web Service → root directory `server` → build command `npm install` → start command `npm start`.
 3. Set env vars: `MONGO_URI` (MongoDB Atlas URI), `CLIENT_ORIGIN` (your Vercel URL).
 
 **Frontend → Vercel:**
+
 1. New Project → root directory `client` → framework preset "Vite".
 2. Set env var `VITE_API_URL` to your deployed backend URL.
 3. Deploy.
-
----
-
-## 6. Notes for the Loom walkthrough
-
-Suggested flow when recording (12–15 min):
-1. **Problem breakdown** — menu → cart → checkout → order → real-time status,
-   mapped to REST endpoints + UI views before writing code.
-2. **Architecture tour** — repository pattern (Mongo/in-memory swap),
-   services vs. controllers, why price is computed server-side.
-3. **TDD walkthrough** — show a couple of tests (e.g. invalid phone number,
-   order status transition) and the code that satisfies them.
-4. **Real-time updates** — show the status simulator + Socket.IO rooms,
-   then demo an order live-updating in the browser without a refresh.
-5. **AI usage** — this project was scaffolded and iterated with an AI
-   pair-programmer (Claude): generating boilerplate (models, routes,
-   repository/service layers), writing the initial test suites, and
-   catching a real bug during development — an infinite render loop in a
-   test helper component that called `addItem()` directly in the render
-   body instead of inside `useEffect`, which hung the entire Vitest run.
-   Isolating it by running test files one at a time (bisection) found the
-   culprit in minutes.
-6. **Challenges** — e.g. designing the Mongo/in-memory abstraction so the
-   app is gradeable without requiring a database, keeping order line items
-   immutable snapshots, and making sure validation errors are consistent
-   between client and server.
-
----
-
-## 7. Evaluation criteria checklist
-
-- ✅ Menu display with name/description/price/image
-- ✅ Cart with quantities, checkout with delivery details
-- ✅ Order status with simulated real-time updates (Socket.IO)
-- ✅ REST API for menu + orders, in-memory or real MongoDB storage
-- ✅ "My Orders" screen — looks up recent orders by phone number
-  (`GET /api/orders?phone=`), persists the customer's phone in
-  `localStorage` so it auto-loads next visit
-- ✅ TDD: 25 backend tests + 19 frontend tests, all passing
-- ✅ React (Vite) UI, clean and functional
-- ✅ Input validation & edge cases (bad phone, missing fields, invalid
-  quantities, non-existent menu items, invalid status transitions)
