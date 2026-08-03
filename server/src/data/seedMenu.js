@@ -1,0 +1,58 @@
+export default [
+  {
+    name: 'Margherita Pizza',
+    description: 'Classic pizza with tomato sauce, fresh mozzarella, and basil.',
+    price: 8.99,
+    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600',
+    category: 'Pizza',
+  },
+  {
+    name: 'Pepperoni Pizza',
+    description: 'Loaded with pepperoni and melted mozzarella on a crispy crust.',
+    price: 10.49,
+    image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=600',
+    category: 'Pizza',
+  },
+  {
+    name: 'Classic Cheeseburger',
+    description: 'Juicy beef patty, cheddar cheese, lettuce, tomato, and house sauce.',
+    price: 7.49,
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600',
+    category: 'Burgers',
+  },
+  {
+    name: 'BBQ Bacon Burger',
+    description: 'Beef patty with crispy bacon, cheddar, and smoky BBQ sauce.',
+    price: 9.29,
+    image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600',
+    category: 'Burgers',
+  },
+  {
+    name: 'Caesar Salad',
+    description: 'Crisp romaine, parmesan, croutons, and creamy Caesar dressing.',
+    price: 6.99,
+    image: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=600',
+    category: 'Salads',
+  },
+  {
+    name: 'Chicken Alfredo Pasta',
+    description: 'Fettuccine tossed in creamy alfredo sauce with grilled chicken.',
+    price: 11.99,
+    image: 'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=600',
+    category: 'Pasta',
+  },
+  {
+    name: 'Loaded Fries',
+    description: 'Crispy fries topped with cheese sauce, bacon bits, and scallions.',
+    price: 5.49,
+    image: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=600',
+    category: 'Sides',
+  },
+  {
+    name: 'Chocolate Milkshake',
+    description: 'Rich and creamy chocolate milkshake topped with whipped cream.',
+    price: 4.99,
+    image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=600',
+    category: 'Drinks',
+  },
+];
