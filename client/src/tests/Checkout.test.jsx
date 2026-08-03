@@ -37,6 +37,7 @@ function renderCheckout({ onOrderPlaced = vi.fn(), onBack = vi.fn() } = {}) {
 describe('Checkout', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   it('shows validation errors when required fields are missing', async () => {

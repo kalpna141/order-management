@@ -35,8 +35,8 @@ export default function OrderTracker({ orderId, onStartNewOrder }) {
 
   return (
     <section className="tracker">
-      <h2>Order #{order.id.slice(-6).toUpperCase()}</h2>
-      <p className="status-text">Thanks, {order.customer.name}! Here's your live order status.</p>
+      <div className="tracker__hero"><div className="tracker__hero-icon">✓</div><div><p className="eyebrow">Live order</p><h1>Thanks, {order.customer.name}!</h1><p>Your order is confirmed and moving right along.</p></div><div className="tracker__order-id"><span>Order number</span><strong>#{order.id.slice(-6).toUpperCase()}</strong></div></div>
+      <div className="tracker__layout"><div className="tracker__progress"><div className="tracker__section-heading"><div><h2>Live order status</h2><p>Updates appear here automatically.</p></div><span className="tracker__live"><i></i> Live</span></div>
       {isCancelled ? (
         <p className="tracker__cancelled">This order was cancelled.</p>
       ) : (
@@ -52,6 +52,7 @@ export default function OrderTracker({ orderId, onStartNewOrder }) {
           })}
         </ol>
       )}
+      <div className="tracker__delivery"><span>⌂</span><div><small>Delivering to</small><strong>{order.customer.address}</strong></div></div></div>
       <div className="tracker__details">
         <h3>Order summary</h3>
         <ul>
@@ -66,9 +67,8 @@ export default function OrderTracker({ orderId, onStartNewOrder }) {
           <span>Total</span>
           <strong>${order.totalAmount.toFixed(2)}</strong>
         </div>
-        <p className="tracker__address">Delivering to: {order.customer.address}</p>
-      </div>
-      <button type="button" className="btn btn--primary" onClick={onStartNewOrder}>Place another order</button>
+        <button type="button" className="btn btn--primary btn--full" onClick={onStartNewOrder}>Place another order</button>
+      </div></div>
     </section>
   );
 }

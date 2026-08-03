@@ -10,9 +10,13 @@ const PORT = process.env.PORT || 5000;
 
 async function start() {
   await connectDB();
-  if (await MenuItem.countDocuments() === 0) {
-    await MenuItem.insertMany(seedMenu);
-  }
+  await MenuItem.bulkWrite(seedMenu.map((item) => ({
+    updateOne: {
+      filter: { name: item.name },
+      update: { $setOnInsert: item },
+      upsert: true,
+    },
+  })));
 
   const app = createApp();
   const httpServer = http.createServer(app);

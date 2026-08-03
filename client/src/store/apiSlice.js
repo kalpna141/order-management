@@ -4,7 +4,7 @@ export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: `${API_URL}/api` }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${API_URL}/api`, timeout: 8000 }),
   tagTypes: ["Menu", "Order"],
   endpoints: (builder) => ({
     getMenu: builder.query({ query: () => "/menu", providesTags: ["Menu"] }),

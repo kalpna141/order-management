@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getApiErrorMessage, useLazyGetOrdersQuery } from '../store/apiSlice';
 
 const PHONE_STORAGE_KEY = 'bite-express:last-phone';
@@ -14,6 +14,7 @@ export function savePhone(phone) {
 export default function OrderHistory({ onTrackOrder, onBack }) {
   const [phone, setPhone] = useState(() => getSavedPhone().replace(/\D/g, '').slice(-10));
   const [searched, setSearched] = useState(false);
+  const activeRequest = useRef(null);
   const [getOrders, { data: orders = [], isFetching: loading, error }] = useLazyGetOrdersQuery();
 
   async function fetchOrders(lookupPhone) {
@@ -21,7 +22,12 @@ export default function OrderHistory({ onTrackOrder, onBack }) {
     if (!normalizedPhone) return;
     setSearched(true);
     savePhone(normalizedPhone);
-    await getOrders(normalizedPhone);
+    activeRequest.current?.abort();
+    const request = getOrders(normalizedPhone);
+    activeRequest.current = request;
+    try { await request; } finally {
+      if (activeRequest.current === request) activeRequest.current = null;
+    }
   }
 
   useEffect(() => {
@@ -38,8 +44,9 @@ export default function OrderHistory({ onTrackOrder, onBack }) {
   return (
     <section className="history">
       <button type="button" className="btn btn--link" onClick={onBack}>← Back to menu</button>
-      <h2>Your recent orders</h2>
+      <div className="history__hero"><div><p className="eyebrow">Order history</p><h1>Your recent orders</h1><p>Find previous orders and follow active deliveries.</p></div><span className="history__hero-icon">↻</span></div>
       <form className="history__lookup" onSubmit={handleSubmit}>
+        <div className="history__lookup-icon">⌕</div><div className="history__lookup-content">
         <label htmlFor="history-phone">Phone number used at checkout</label>
         <div className="history__lookup-row">
           <input
@@ -50,17 +57,20 @@ export default function OrderHistory({ onTrackOrder, onBack }) {
             inputMode="numeric"
             maxLength={10}
           />
-          <button type="submit" className="btn btn--primary" disabled={loading}>
-            {loading ? 'Searching…' : 'Find orders'}
+          <button type="submit" className="btn btn--primary" disabled={phone.length !== 10}>
+            {loading ? 'Search again' : 'Find orders'}
           </button>
         </div>
+        </div>
       </form>
-      {error && <p className="status-text status-text--error">{getApiErrorMessage(error)}</p>}
-      {searched && !loading && orders.length === 0 && !error && <p className="status-text">No orders found for that phone number.</p>}
+      {error && <div className="history-error" role="alert"><div className="history-error__icon">!</div><div><strong>Unable to load your orders</strong><p>{/failed to fetch|network|timeout/i.test(getApiErrorMessage(error)) ? 'The order service is currently unreachable. Please check that the server is running and try again.' : getApiErrorMessage(error)}</p></div><button type="button" onClick={() => fetchOrders(phone)}>{loading ? 'Retry now' : 'Try again'}</button></div>}
+      {searched && !loading && orders.length === 0 && !error && <div className="history-empty"><div className="history-empty__icon"><span>▤</span></div><p className="eyebrow">No order history yet</p><h2>No orders found</h2><p>We couldn’t find any orders linked to <strong>{phone}</strong>. Check the number or start something delicious.</p><div><button type="button" className="history-empty__secondary" onClick={() => setPhone('')}>Try another number</button><button type="button" className="history-empty__primary" onClick={onBack}>Start an order</button></div></div>}
       {orders.length > 0 && (
+        <><div className="history__results-heading"><h2>Orders</h2><span>{orders.length} found</span></div>
         <ul className="history__list">
           {orders.map((order) => (
             <li key={order.id} className="history__item">
+              <div className="history__item-icon">▤</div><div className="history__item-content">
               <div className="history__item-main">
                 <span className="history__item-id">Order #{order.id.slice(-6).toUpperCase()}</span>
                 <span className={`history__status history__status--${order.status.replace(/\s+/g, '-').toLowerCase()}`}>{order.status}</span>
@@ -71,9 +81,10 @@ export default function OrderHistory({ onTrackOrder, onBack }) {
               </div>
               <p className="history__item-summary">{order.items.map((item) => `${item.quantity}× ${item.name}`).join(', ')}</p>
               <button type="button" className="btn btn--link" onClick={() => onTrackOrder(order.id)}>Track this order →</button>
+              </div>
             </li>
           ))}
-        </ul>
+        </ul></>
       )}
     </section>
   );

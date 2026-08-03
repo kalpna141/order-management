@@ -14,6 +14,7 @@ export default function MenuItemCard({ item }) {
   }
 
   return (
+    <>
     <div className="menu-card">
       <img className="menu-card__image" src={item.image} alt={item.name} loading="lazy" />
       <div className="menu-card__body">
@@ -41,10 +42,12 @@ export default function MenuItemCard({ item }) {
             </button>
           </div>
           <button type="button" className="btn btn--primary" onClick={handleAdd}>
-            {justAdded ? 'Added ✓' : 'Add to cart'}
+            Add to cart
           </button>
         </div>
       </div>
     </div>
+    {justAdded && <div className="cart-toast" role="status"><span>✓</span><div><strong>Added to cart</strong><small>{item.name} is now in your cart.</small></div></div>}
+    </>
   );
 }
