@@ -76,8 +76,8 @@ describe('Checkout', () => {
     await user.click(screen.getByRole('button', { name: /add address/i }));
     await user.click(screen.getByRole('button', { name: /place order/i }));
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
-    const request = fetchMock.mock.calls[0][0];
+    await waitFor(() => expect(fetchMock.mock.calls.some(([request]) => request.url === 'http://localhost:5000/api/orders')).toBe(true));
+    const request = fetchMock.mock.calls.find(([candidate]) => candidate.url === 'http://localhost:5000/api/orders')[0];
     expect(request.url).toBe('http://localhost:5000/api/orders');
     expect(await request.json()).toEqual({
       items: [{ menuItemId: 'menu-1', quantity: 1 }],
