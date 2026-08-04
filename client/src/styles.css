@@ -729,6 +729,11 @@ button, input { font: inherit; }
 .saved-address p { margin: 10px 0 0 50px; font-size: .88rem; color: var(--color-muted); }
 .address-save { background: #173f38; color: white; align-self: flex-start; }
 .add-address { border: 1px dashed #173f38; background: transparent; color: #173f38; padding: 13px; border-radius: 4px; font-weight: 800; cursor: pointer; }
+.address-required-note { display: flex; align-items: center; gap: 10px; padding: 12px 14px; color: #755111; background: #fff8e8; border: 1px solid #edd9aa; border-radius: 5px; }
+.address-required-note > span { width: 26px; height: 26px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; color: #fff; background: #d58b17; font-weight: 900; }
+.address-required-note p { margin: 0; font-size: .7rem; line-height: 1.4; }
+.address-required-note strong { display: block; font-size: .76rem; }
+.checkout__form .btn--primary:disabled { background: #aaa49a; opacity: .7; }
 
 .checkout__summary {
   display: flex;

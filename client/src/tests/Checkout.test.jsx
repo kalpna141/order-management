@@ -44,7 +44,7 @@ describe('Checkout', () => {
     const user = userEvent.setup();
     renderCheckout();
 
-    await user.click(screen.getByRole('button', { name: /place order/i }));
+    await user.click(screen.getByRole('button', { name: /add address/i }));
 
     expect(await screen.findByText(/name is required/i)).toBeInTheDocument();
     expect(screen.getByText(/delivery address is required/i)).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe('Checkout', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Jane Doe');
     await user.type(screen.getByLabelText(/delivery address/i), '123 Main St');
     await user.type(screen.getByLabelText(/phone number/i), 'abc');
-    await user.click(screen.getByRole('button', { name: /place order/i }));
+    await user.click(screen.getByRole('button', { name: /add address/i }));
 
     expect(await screen.findByText(/exactly 10 digits/i)).toBeInTheDocument();
     expect(fetchMock).not.toHaveBeenCalled();
@@ -73,6 +73,7 @@ describe('Checkout', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Jane Doe');
     await user.type(screen.getByLabelText(/delivery address/i), '123 Main St');
     await user.type(screen.getByLabelText(/phone number/i), '9876543210');
+    await user.click(screen.getByRole('button', { name: /add address/i }));
     await user.click(screen.getByRole('button', { name: /place order/i }));
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
@@ -93,6 +94,7 @@ describe('Checkout', () => {
     await user.type(screen.getByLabelText(/full name/i), 'Jane Doe');
     await user.type(screen.getByLabelText(/delivery address/i), '123 Main St');
     await user.type(screen.getByLabelText(/phone number/i), '9876543210');
+    await user.click(screen.getByRole('button', { name: /add address/i }));
     await user.click(screen.getByRole('button', { name: /place order/i }));
 
     expect(await screen.findByText(/menu item unavailable/i)).toBeInTheDocument();

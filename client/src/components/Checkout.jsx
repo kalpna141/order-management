@@ -41,6 +41,7 @@ export default function Checkout({ onOrderPlaced, onBack, coupon = null }) {
 
   function validate() {
     const errs = [];
+    if (!savedAddress || editingAddress) errs.push('Please save your delivery address before placing the order.');
     if (!form.name.trim()) errs.push('Name is required.');
     if (!form.address.trim()) errs.push('Delivery address is required.');
     if (!/^\d{10}$/.test(form.phone)) {
@@ -133,6 +134,7 @@ export default function Checkout({ onOrderPlaced, onBack, coupon = null }) {
         </>}
 
         {savedAddress && !editingAddress && <button type="button" className="add-address" onClick={() => { setForm(initialForm); setEditingAddress(true); }}>+ Add new address</button>}
+        {(!savedAddress || editingAddress) && <div className="address-required-note"><span>!</span><p><strong>Save your address to continue</strong>Your order can only be placed after the delivery details above are saved.</p></div>}
 
         <div className="payment-section"><div className="checkout-section-title"><span>2</span><div><h2>Payment method</h2><p>Choose your preferred payment option.</p></div></div><div className="payment-options"><label className={paymentMethod === 'cod' ? 'payment-option payment-option--active' : 'payment-option'}><input type="radio" name="paymentMethod" value="cod" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} /><span className="payment-option__icon">$</span><span><strong>Pay on delivery</strong><small>Cash or UPI at your door</small></span></label><label className={paymentMethod === 'online' ? 'payment-option payment-option--active' : 'payment-option'}><input type="radio" name="paymentMethod" value="online" checked={paymentMethod === 'online'} onChange={() => setPaymentMethod('online')} /><span className="payment-option__icon">◇</span><span><strong>Pay online</strong><small>Secure digital payment</small></span></label></div>{paymentMethod === 'online' && <p className="payment-note">You’ll be redirected to secure payment after placing the order.</p>}</div>
 
@@ -144,7 +146,7 @@ export default function Checkout({ onOrderPlaced, onBack, coupon = null }) {
           </ul>
         )}
 
-        <button type="submit" className="btn btn--primary btn--full" disabled={submitting}>
+        <button type="submit" className="btn btn--primary btn--full" disabled={submitting || !savedAddress || editingAddress || items.length === 0}>
           {submitting ? 'Placing order…' : `Place order · $${payableTotal.toFixed(2)}`}
         </button>
       </form>

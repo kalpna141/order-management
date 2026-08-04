@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { beforeEach, describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { CartProvider, useCart } from '../context/CartContext';
 
@@ -10,6 +10,8 @@ function wrapper({ children }) {
 }
 
 describe('CartContext', () => {
+  beforeEach(() => localStorage.clear());
+
   it('starts empty', () => {
     const { result } = renderHook(() => useCart(), { wrapper });
     expect(result.current.items).toHaveLength(0);
